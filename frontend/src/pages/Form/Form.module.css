@@ -39,7 +39,6 @@
   border-radius: 8px;
 }
 
-/* Esconde o input padrao travado do navegador */
 .hiddenInput {
   display: none;
 }
@@ -68,8 +67,11 @@
 }
 
 .errorMessage {
-  color: #d93025;
-  font-size: 0.875rem;
+  padding: 6px;
+  border-radius: 3px;
+  background-color: rgb(175, 28, 28);
+  color: #faf3f2;
+  font-size: 0.9rem;
   margin: -0.5rem 0 1rem 0;
 }
 

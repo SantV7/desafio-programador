@@ -11,5 +11,7 @@
 - **Validação de Lógica e Tratamento de Erros:** Validamos em conjunto as regras de upload do frontend, implementando restrições do input HTML e checagens via TypeScript para aceitar exclusivamente arquivos no formato PDF (`application/pdf`).
 - **Prevenção de Dados e Tratamento de Exceções:** Inserimos feedbacks visuais de erro caso o usuário tente submeter arquivos inválidos ou vazios, garantindo que o estado da aplicação limpe o input para prevenir o envio involuntário de dados inconsistentes antes de prosseguir para o backend.
 
+- **Separação de Conceitos no Frontend:** Isolamento da lógica de comunicação com a API dentro do custom hook `useFetchData`, garantindo desacoplamento entre componentes visuais de formulário e chamadas assíncronas.
 
-- **Interface e Ícones:** Adição da biblioteca `lucide-react` para iconografia visual e responsiva no front-end.
+
+- **Interface e Ícones:** biblioteca `lucide-react` para iconografia visual e responsiva no front-end. Adicionei icons para ficar mais intuitivo ao usuário, facilitando assim também para um prevenção de erros natual, pois ja uma certa associação com os icones usados e os objetivos onde eles estão.

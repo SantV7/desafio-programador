@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import styles from './Form.module.css';
+import { FileQuestionMark, Paperclip, LayersArrowDown, Shell, ShieldX } from 'lucide-react';
+import useFetchData from '../../hook/useFetchData';
 
-const Form = () => {
+interface FormProps {
+  onUploadSuccess?: (id: string) => void;
+}
+
+const Form: React.FC<FormProps> = ({ onUploadSuccess }) => {
   const [documentType, setDocumentType] = useState<'cartao-ponto' | 'holerite'>('cartao-ponto');
   const [file, setFile] = useState<File | null>(null);
-  const [error, setError] = useState<string>('');
+
+  const { uploadDocument, loading, error, setError } = useFetchData();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -25,7 +32,7 @@ const Form = () => {
     setFile(selectedFile);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!file) {
@@ -33,23 +40,23 @@ const Form = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('type', documentType);
-    formData.append('file', file);
-
-    console.log('Enviando dados:', { documentType, fileName: file.name });
+    const id = await uploadDocument(documentType, file);
+    if (id && onUploadSuccess) {
+      onUploadSuccess(id);
+    }
   };
 
   return (
     <form className={styles.container} onSubmit={handleSubmit}>
       <div className={styles.fieldGroup}>
         <label className={styles.label} htmlFor="documentType">
-          Tipo de Documento:
+          Tipo de Documento <FileQuestionMark style={{ marginBottom: '-2px' }} size={18} />
         </label>
         <select
           id="documentType"
           className={styles.select}
           value={documentType}
+          disabled={loading}
           onChange={(e) => setDocumentType(e.target.value as 'cartao-ponto' | 'holerite')}
         >
           <option value="cartao-ponto">Cartão de Ponto</option>
@@ -58,11 +65,14 @@ const Form = () => {
       </div>
 
       <div className={styles.fieldGroup}>
-        <span className={styles.label}>Arquivo PDF:</span>
+        <span className={styles.label}>
+          Arquivo PDF <Paperclip style={{ marginBottom: '-2px' }} size={18} />
+        </span>
         <input
           id="fileInput"
           type="file"
           accept=".pdf,application/pdf"
+          disabled={loading}
           className={styles.hiddenInput}
           onChange={handleFileChange}
         />
@@ -71,10 +81,22 @@ const Form = () => {
         </label>
       </div>
 
-      {error && <p className={styles.errorMessage}>{error}</p>}
+      {error && (
+        <p className={styles.errorMessage}>
+          {error} <ShieldX style={{ marginBottom: '-5px' }} />
+        </p>
+      )}
 
-      <button type="submit" className={styles.submitButton}>
-        Enviar Documento
+      <button type="submit" className={styles.submitButton} disabled={loading}>
+        {loading ? (
+          <>
+            Enviando... <Shell className={styles.spinner} style={{ marginBottom: '-4px' }} size={18} />
+          </>
+        ) : (
+          <>
+            Enviar Documento <LayersArrowDown style={{ marginBottom: '-6px' }} size={18} />
+          </>
+        )}
       </button>
     </form>
   );
